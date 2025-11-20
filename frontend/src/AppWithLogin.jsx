@@ -412,9 +412,9 @@ function UserDashboard({ currentUser, onLogout }) {
   
       if (response.ok) {
         const result = await response.json();
-        alert('✅ Booking confirmed! 🎉\n(Trigger: trg_calculate_ticket_amount auto-calculated amount)');
+        alert('✅ Booking confirmed! 🎉');
         
-        // Update local state
+       
         const newBooking = {
           id: result.ticketId,
           movieTitle: selectedMovie.Title,
@@ -434,7 +434,7 @@ function UserDashboard({ currentUser, onLogout }) {
         const newBookings = [...bookings, newBooking];
         setBookings(newBookings);
         
-        // Also keep in localStorage for backup
+       
         localStorage.setItem(`bookings_${currentUser.id}`, JSON.stringify(newBookings));
         
         // Reset form
@@ -1194,7 +1194,7 @@ function AdminDashboard({ currentUser, onLogout }) {
     loadSnacksRevenue();
     const interval = setInterval(() => {
       loadData();
-      loadSnacksRevenue(); // And this line
+      loadSnacksRevenue(); 
     }, 3000);
     return () => clearInterval(interval);
   }, []);
@@ -1272,7 +1272,7 @@ function AdminDashboard({ currentUser, onLogout }) {
   };
   const loadSnacksRevenue = async () => {
     try {
-      // You might need to create a new endpoint for total snacks revenue
+      
       const response = await fetch(`${API_URL}/analytics/snacks-revenue`);
       if (response.ok) {
         const data = await response.json();

@@ -315,7 +315,7 @@ app.get('/api/bookings', async (req, res) => {
       return res.status(400).json({ message: 'User ID is required' });
     }
 
-    // Add cache-control headers to prevent 304 responses
+  
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
@@ -514,7 +514,7 @@ app.get('/api/admin/stats', async (req, res) => {
   }
 });
 
-// ========== ANALYTICS ROUTES (Using Functions & Procedures) ==========
+// ========== ANALYTICS ROUTES  ==========
 
 // FUNCTION 1: Get movie revenue using fn_get_movie_revenue()
 app.get('/api/analytics/movie/:id/revenue', async (req, res) => {
@@ -575,7 +575,7 @@ app.get('/api/analytics/movie-recommendations', async (req, res) => {
   }
 });
 
-// FUNCTION 2: Get average rating for a movie using fn_get_movie_avg_rating()
+// FUNCTION : Get average rating for a movie using fn_get_movie_avg_rating()
 app.get('/api/analytics/movie/:id/rating', async (req, res) => {
   try {
     const [avgResult] = await db.query(
@@ -598,7 +598,7 @@ app.get('/api/analytics/movie/:id/rating', async (req, res) => {
     res.status(500).json({ message: 'Error fetching movie rating' });
   }
 });
-// Add this to your server.js in the analytics section
+
 app.get('/api/analytics/snacks-revenue', async (req, res) => {
   try {
     const [result] = await db.query(`
@@ -616,7 +616,7 @@ app.get('/api/analytics/snacks-revenue', async (req, res) => {
     res.status(500).json({ message: 'Error fetching snacks revenue' });
   }
 });
-// FUNCTION 3: Get user snacks spending using fn_get_user_snacks_spent()
+// FUNCTION : Get user snacks spending using fn_get_user_snacks_spent()
 app.get('/api/analytics/user/:id/snacks', async (req, res) => {
   try {
     const [snacksSpent] = await db.query(
@@ -652,7 +652,7 @@ app.get('/api/analytics/user/:id/snacks', async (req, res) => {
 });
 
 // PROCEDURE 1: sp_get_user_booking_history()
-// PROCEDURE 1: sp_get_user_booking_history()
+
 app.get('/api/analytics/user/:id/booking-history', async (req, res) => {
   let connection;
   try {
@@ -660,8 +660,7 @@ app.get('/api/analytics/user/:id/booking-history', async (req, res) => {
     console.log('📊 Fetching booking history for user:', userId);
     
     connection = await db.getConnection();
-    
-    // First check if procedure exists
+
     const [procedureCheck] = await connection.query(
       `SELECT ROUTINE_NAME FROM information_schema.ROUTINES 
        WHERE ROUTINE_NAME = 'sp_get_user_booking_history' 
@@ -697,7 +696,7 @@ app.get('/api/analytics/user/:id/booking-history', async (req, res) => {
   } catch (error) {
     console.error('❌ Error in booking history endpoint:', error.message);
     
-    // Fallback: If procedure fails, use regular query
+    
     try {
       const [fallbackBookings] = await db.query(`
         SELECT 
@@ -804,7 +803,7 @@ app.post('/api/complete-booking-procedure', async (req, res) => {
   }
 });
 
-// Complex query: Get all movies with revenue, rating, and booking count
+
 app.get('/api/analytics/movies-summary', async (req, res) => {
   try {
     const [moviesSummary] = await db.query(`
@@ -837,7 +836,7 @@ app.get('/api/analytics/movies-summary', async (req, res) => {
   }
 });
 
-// Complex query: Get user analytics with spending patterns
+
 app.get('/api/analytics/users-summary', async (req, res) => {
   try {
     const [usersSummary] = await db.query(`
@@ -870,7 +869,6 @@ app.get('/api/analytics/users-summary', async (req, res) => {
   }
 });
 
-// Complex query: Theatre performance with validation
 app.get('/api/analytics/theatre-performance', async (req, res) => {
   try {
     const [theatrePerformance] = await db.query(`
@@ -903,17 +901,9 @@ app.get('/api/analytics/theatre-performance', async (req, res) => {
   }
 });
 
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
-    message: 'Server is running',
-    timestamp: new Date().toISOString(),
-    database: process.env.DB_NAME
-  });
-});
 
-// Error handling middleware
+
+
 app.use((error, req, res, next) => {
   console.error('🚨 Unhandled error:', error);
   res.status(500).json({ 
@@ -922,7 +912,7 @@ app.use((error, req, res, next) => {
   });
 });
 
-// 404 handler
+
 app.use('*', (req, res) => {
   res.status(404).json({ message: 'Endpoint not found' });
 });
@@ -933,16 +923,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
   console.log(`📊 Database: ${process.env.DB_NAME}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`
-  📊 Available Endpoints:
-  ✅ AUTH: POST /api/login, POST /api/register
-  ✅ MOVIES: GET/POST/DELETE /api/movies
-  ✅ THEATRES: GET/POST/DELETE /api/theatres
-  ✅ SNACKS: GET/POST/DELETE /api/snacks
-  ✅ BOOKINGS: GET/POST /api/bookings
-  ✅ FEEDBACK: GET/POST /api/feedback
-  ✅ ADMIN: GET /api/admin/*
-  ✅ ANALYTICS: GET /api/analytics/*
-  ✅ HEALTH: GET /api/health
-  `);
+  
 });
